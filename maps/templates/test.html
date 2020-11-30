@@ -493,6 +493,32 @@ Structure:
             connectPois();
         }
 
+        function addPoiLoad(currentPoiInfoLoad) {
+          // Null Case
+          if (!currentPoiInfoLoad) {
+              alert("BS");
+              return;
+          }
+          var currentNode = dummyFirstNode;
+          for (var index = 1; index <= totalPoiNum; index++) {
+              currentNode = currentNode.nextNode;
+              if (currentNode.infoDisplay == currentPoiInfoLoad["name"]) {
+                  return;
+              }
+          }
+
+          // Regular Case: js
+          var newNode = new createNode();
+          newNode.info = JSON.stringify(currentPoiInfoLoad, null);;
+          newNode.infoDisplay = currentPoiInfoLoad["name"];
+          newNode.prevNode = lastNode;
+          lastNode.nextNode = newNode;
+          lastNode = newNode;
+          totalPoiNum++;
+          // Regular Case: html
+          connectPois();
+        }
+
 
         // 3.2.2.2 Delete a position
         function deletePoi (idxToDelete) {
@@ -683,10 +709,21 @@ Structure:
                 // window.history.go(-1);
                 setTimeout("javascript:location.href='search'", 0);
             } else if (func_INFO == 1) {
+                var heartNum = {{ numPoi }};
+                heartNum = eval(heartNum);
+
                 var diomondtemp = '{{ positionsToReturn }}';
                 diomondtemp = diomondtemp.replace(/(&quot;)/gm,'\"');
                 diomondtemp = JSON.parse(diomondtemp);
-                // alert(diomondtemp["0"]);
+                for (i=0;i<heartNum;i++) {
+                    addPoiLoad(diomondtemp[""+i]);
+                }
+
+                var spadeLst = eval('{{ start_end }}');
+                var spadeStart = "startPoi" + spadeLst[0];
+                var spadeEnd = "endPoi" + spadeLst[1];
+                document.getElementById(spadeStart).checked = true;
+                document.getElementById(spadeEnd).checked = true;
 
                 var clubtemp = {{ cluster_prev }};
                 document.getElementById("clusterNumber").value = clubtemp;
@@ -694,10 +731,23 @@ Structure:
 
                 shortestPathDisplay();
             } else if (func_INFO == 2) {
+                var heartNum = {{ numPoi }};
+                heartNum = eval(heartNum);
+
                 var diomondtemp = '{{ positionsToReturn }}';
                 diomondtemp = diomondtemp.replace(/(&quot;)/gm,'\"');
                 diomondtemp = JSON.parse(diomondtemp);
-                // alert(diomondtemp["0"]);
+                for (i=0;i<heartNum;i++) {
+                  for (i=0;i<heartNum;i++) {
+                      addPoiLoad(diomondtemp[""+i]);
+                  }
+                }
+
+                var spadeLst = eval('{{ start_end }}');
+                var spadeStart = "startPoi" + spadeLst[0];
+                var spadeEnd = "endPoi" + spadeLst[1];
+                document.getElementById(spadeStart).checked = true;
+                document.getElementById(spadeEnd).checked = true;
 
                 var clubtemp = {{ cluster_prev }};
                 document.getElementById("clusterNumber").value = clubtemp;

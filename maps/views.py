@@ -19,6 +19,8 @@ def test(request):
         'FUNC' : 0,
         'cluster_prev': 0,
         'positionsToReturn': {},
+        'numPoi': 0,
+        'start_end': [0, 0]
     }) #测试
 
 def anything_to_string(something):
@@ -46,6 +48,8 @@ def tested(request):
     guides = None
     cluster = 0
     positionsToReturn = ""
+    numPoi = 0
+    start_end = [0, 0]
 
     FUNC_indicator = [0]
     if request.method == 'POST':
@@ -53,6 +57,7 @@ def tested(request):
         lst_of_loc_str = [(str + '}') for str in long_str.split('}')]
         lst_of_loc_str.pop()
         lst_of_loc = [eval(str) for str in lst_of_loc_str]
+        numPoi = len(lst_of_loc)
         print(lst_of_loc)
         axes = [loc["location"] for loc in lst_of_loc]
         print(axes)
@@ -66,6 +71,7 @@ def tested(request):
         end_index = request.POST.get('end_index')
         start_index = eval(start_index)
         end_index = eval(end_index)
+        start_end = [start_index + 1, end_index + 1]
 
         if cluster == 0:
             if start_index == -1 and end_index == -1:
@@ -157,6 +163,8 @@ def tested(request):
                 'Locs': locs,
                 'FUNC': FUNC_indicator[0],
                 'cluster_prev': cluster,
+                'numPoi': numPoi,
+                'start_end': start_end,
             })
 
     try:
@@ -187,4 +195,6 @@ def tested(request):
         'Guides': guides,
         'FUNC' : FUNC_indicator[0],
         'cluster_prev': cluster,
+        'numPoi': numPoi,
+        'start_end': start_end,
     })
